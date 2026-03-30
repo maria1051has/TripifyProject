@@ -5,159 +5,127 @@ class BookingPage extends StatefulWidget {
   final String packageName;
   final String packagePrice;
 
-  const BookingPage({
-    Key? key,
-    required this.packageName,
-    required this.packagePrice,
-  }) : super(key: key);
+  BookingPage({required this.packageName, required this.packagePrice});
 
   @override
   State<BookingPage> createState() => _BookingPageState();
 }
 
 class _BookingPageState extends State<BookingPage> {
-  String selectedPayment = "";
 
-  Widget buildPaymentTile({
-    required String title,
-    required String subtitle,
-    required String imagePath,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedPayment = title;
-        });
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 15),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: selectedPayment == title
-                ? Colors.teal
-                : Colors.transparent,
-            width: 2,
-          ),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.transparent,
-              backgroundImage: AssetImage(imagePath),
-            ),
-            const SizedBox(width: 15),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey.shade400,
-            ),
-          ],
-        ),
-      ),
+  TextEditingController name = TextEditingController();
+  TextEditingController phone = TextEditingController();
+
+  String pay = "";
+  DateTime? date;
+
+  pickDate() async {
+    var d = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2030),
     );
+    if (d != null) {
+      setState(() {
+        date = d;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white,
+
       appBar: AppBar(
+        title: Text("Booking"),
         backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-        title: const Text(
-          "Payment Method",
-          style: TextStyle(color: Colors.black),
-        ),
       ),
+
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(15),
+
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            buildPaymentTile(
-              title: "Bkash",
-              subtitle: "Pay with Bkash",
-              imagePath: "assets/Bikash.png",
-            ),
-            buildPaymentTile(
-              title: "Nagad",
-              subtitle: "Pay with Nagad",
-              imagePath: "assets/Nagad.png",
-            ),
-            buildPaymentTile(
-              title: "Card Payment",
-              subtitle: "Pay with debit or credit cards",
-              imagePath: "assets/card.jpg",
+
+            Text(widget.packageName),
+            Text(widget.packagePrice, style: TextStyle(color: Colors.teal)),
+
+            SizedBox(height: 15),
+
+            TextField(
+              controller: name,
+              decoration: InputDecoration(hintText: "Name"),
             ),
 
-            const Spacer(),
+            TextField(
+              controller: phone,
+              decoration: InputDecoration(hintText: "Phone"),
+            ),
 
-            const Divider(),
+            SizedBox(height: 10),
+
+            GestureDetector(
+              onTap: pickDate,
+              child: Container(
+                padding: EdgeInsets.all(10),
+                color: Colors.grey[200],
+                child: Text(date == null
+                    ? "Select Date"
+                    : "${date!.day}-${date!.month}-${date!.year}"),
+              ),
+            ),
+
+            SizedBox(height: 15),
+
+            Text("Payment"),
 
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Subtotal",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+                Radio(
+                  value: "bkash",
+                  groupValue: pay,
+                  onChanged: (v) {
+                    setState(() {
+                      pay = "bkash";
+                    });
+                  },
                 ),
-                Text(
-                  widget.packagePrice,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.teal,
-                  ),
-                ),
+                Text("Bkash")
               ],
             ),
 
-            const SizedBox(height: 20),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
-                  minimumSize: const Size(double.infinity, 50),
+            Row(
+              children: [
+                Radio(
+                  value: "nagad",
+                  groupValue: pay,
+                  onChanged: (v) {
+                    setState(() {
+                      pay = "nagad";
+                    });
+                  },
                 ),
-                onPressed: () {
-                  if (selectedPayment.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Please select a payment method"),
-                      ),
-                    );
-                    return;
-                  }
+                Text("Nagad")
+              ],
+            ),
+
+            SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+
+                if (name.text == "" ||
+                    phone.text == "" ||
+                    pay == "" ||
+                    date == null) {
+
+                  print("Fill all");
+
+                } else {
 
                   Navigator.push(
                     context,
@@ -165,23 +133,18 @@ class _BookingPageState extends State<BookingPage> {
                       builder: (context) => BookingDetails(
                         packageName: widget.packageName,
                         packagePrice: widget.packagePrice,
-                        paymentMethod: selectedPayment,
+                        paymentMethod: pay,
                       ),
                     ),
                   );
-                },
-                child: const Text(
-                  "Checkout",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+                }
+              },
+              child: Text("Confirm"),
             )
+
           ],
         ),
       ),
     );
   }
 }
-

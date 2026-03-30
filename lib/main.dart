@@ -1,14 +1,11 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';   // 👈 this import is required
 import 'splash_screen.dart';
 
 
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(TripifyApp());
+void main() {
+  runApp(const TripifyApp());
 }
+
 class TripifyApp extends StatelessWidget {
   const TripifyApp({super.key});
 
