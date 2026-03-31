@@ -1,191 +1,142 @@
 import 'package:flutter/material.dart';
-import 'customer/customer_login_screen.dart';
+import 'package:tripifyUpdated/customer/customer_login_screen.dart';
+import 'customer/home_feed_screen.dart';
 import 'agency/agency_login_screen.dart';
 
-class HomePage extends StatelessWidget {
-
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF2FA4A9),
-              Color(0xFF1C6E73),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 32),
-
-                // LOGO + APP NAME
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/whitelogo2.png',
-                      height: 80,
-                      width: 80,
-                      fit: BoxFit.contain,
-                    ),
-                    Transform.translate(
-                      offset: const Offset(-2, 0), // Moves the text 6 pixels left
-                      child: const Text(
-                        'Tripify',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 6),
-
-                // Tagline
-                const Text(
-                  'Explore • Compare • Travel',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
-                  ),
-                ),
-
-                const Spacer(),
-
-                // Customer Card
-                RoleOptionCard(
-                  icon: Icons.person,
-                  title: 'Continue as Customer',
-                  subtitle: 'Explore and compare trip packages',
-                  onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                        const CustomerLoginScreen(),
-                      ),
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 20),
-
-
-                RoleOptionCard(
-                  icon: Icons.apartment,
-                  title: 'Continue as Agency',
-                  subtitle: 'Publish and manage trip packages',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const AgencyLoginScreen(),
-                      ),
-                    );
-                  },
-                ),
-
-                const Spacer(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  State<HomePage> createState() => _HomePageState();
 }
 
-
-class RoleOptionCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-
-  const RoleOptionCard({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-  });
-
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
+    return Scaffold(
+
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset(
+            'assets/whitelogo2.png',
+          ),
+        ),
+        title: Column(
+          children: [
+            Text('Tripify',style: TextStyle(color: Colors.white)),
+            Text(" Compare . Choose . Travel ",style: TextStyle(fontSize: 14,color:Colors.white),
             ),
           ],
         ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: const Color(0xFF2FA4A9).withOpacity(0.15),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon,
-                size: 28,
-                color: const Color(0xFF2FA4A9),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+
+        backgroundColor: Colors.teal,
+      ),
+      body:Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children:[
+
+            Padding(padding: const EdgeInsets.symmetric(horizontal:30),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CustomerLoginScreen(),
                     ),
+                  );
+                },
+                child:Container(
+                  height:70,
+                  width:MediaQuery.of(context).size.width * 0.8,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.teal,
+                      boxShadow: [
+                        BoxShadow(color:Colors.grey.shade500,offset:Offset(4.0,4.0),blurRadius:15.0, spreadRadius: 1.0,),
+                        BoxShadow(color:Colors.white,offset:Offset(-4.0,-4.0),blurRadius:15.0, spreadRadius: 1.0,),
+                      ]
+
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(Icons.person, color: Colors.white),
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children:[
+                                Text("Continue as Voyager", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500,),),
+                                Text("Explore and Compare Trip Packages",style: TextStyle(fontSize: 10,color:Colors.white54),),
+                              ]
+                          ),
+                        ),
+                        Icon(Icons.arrow_forward_ios, color: Colors.white),
+                      ],
                     ),
+
                   ),
-                ],
+                ),
               ),
             ),
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey,
+            SizedBox(height:30),
+            Padding(padding: const EdgeInsets.symmetric(horizontal:30),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AgencyLoginScreen(),
+                    ),
+                  );
+                },
+                child:Container(
+                  height:70,
+                  width:MediaQuery.of(context).size.width * 0.8,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.teal,
+                      boxShadow: [
+                        BoxShadow(color:Colors.grey.shade500,offset:Offset(4.0,4.0),blurRadius:15.0, spreadRadius: 1.0,),
+                        BoxShadow(color:Colors.white,offset:Offset(-4.0,-4.0),blurRadius:15.0, spreadRadius: 1.0,),
+                      ]
+
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(Icons.person, color: Colors.white),
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children:[
+                                Text("Continue as Agency", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500,),),
+                                Text("Publish and manage trip packages",style: TextStyle(fontSize:10,color:Colors.white54),),
+                              ]
+                          ),
+                        ),
+                        Icon(Icons.arrow_forward_ios, color: Colors.white),
+                      ],
+                    ),
+
+                  ),
+                ),
+              ),
             ),
+
+
+
           ],
         ),
       ),
     );
   }
 }
+
