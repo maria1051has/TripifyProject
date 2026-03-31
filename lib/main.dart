@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';   // 👈 this import is required
+import 'package:flutter/material.dart';
 import 'splash_screen.dart';
 
 
@@ -18,7 +18,6 @@ class TripifyApp extends StatelessWidget {
         primarySwatch: Colors.teal,
         fontFamily: 'Roboto',
       ),
-      // Start app with SplashScreen
       home: const SplashScreen(),
     );
   }
