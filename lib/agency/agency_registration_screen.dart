@@ -164,17 +164,19 @@ class _AgencyRegistrationScreenState extends State<AgencyRegistrationScreen> {
           backgroundColor: Colors.white,
         ),
       );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Something went wrong. Try again.',
-            style: TextStyle(color: Colors.grey),
-          ),
-          backgroundColor: Colors.white,
-        ),
-      );
-    } finally {
+    }  catch (e) {
+  debugPrint('FULL ERROR: $e');
+
+  ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+  content: Text(
+  'Error: $e',
+  style: TextStyle(color: Colors.grey),
+  ),
+  backgroundColor: Colors.white,
+  ),
+  );
+  } finally {
       setState(() => _isLoading = false);
     }
   }
