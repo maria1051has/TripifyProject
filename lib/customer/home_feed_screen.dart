@@ -308,7 +308,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ModernHomeScreen(placeName: title),
+            builder: (_) => HotelsScreen(placeName: title),
           ),
         );
       },
