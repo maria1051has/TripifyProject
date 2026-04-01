@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.tripify"
+    namespace = "com.tripify"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
