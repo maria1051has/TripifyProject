@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "420640866742",
-    "project_id": "flutter-project-eff01",
-    "storage_bucket": "flutter-project-eff01.firebasestorage.app"
+    "project_number": "455429171819",
+    "project_id": "tripify-9e595",
+    "storage_bucket": "tripify-9e595.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:420640866742:android:7cc0ee059abc17c4f20117",
+        "mobilesdk_app_id": "1:455429171819:android:2091be21e223033d801f2e",
         "android_client_info": {
           "package_name": "com.example.tripify"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBtUfJmHxFFEMi_4Xv9zfLaBEy7mrCYyKE"
+          "current_key": "AIzaSyCrf3omU5FzNQiYAS3yTfShUd7YWJNBoOk"
         }
       ],
       "services": {
@@ -26,15 +26,15 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:420640866742:android:5014258dcfb4f6b2f20117",
+        "mobilesdk_app_id": "1:455429171819:android:d429eebbaa4106fa801f2e",
         "android_client_info": {
-          "package_name": "com.tripify.app"
+          "package_name": "com.example.tripify"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBtUfJmHxFFEMi_4Xv9zfLaBEy7mrCYyKE"
+          "current_key": "AIzaSyCrf3omU5FzNQiYAS3yTfShUd7YWJNBoOk"
         }
       ],
       "services": {

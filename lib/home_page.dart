@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+  nazifa-feature
 import 'package:tripify/agency/agency_registration_screen.dart';
 import 'customer/customer_login_screen.dart';
 import 'package:tripify/customer/home_feed_screen.dart';
+ 
+import 'package:tripifyUpdated/customer/customer_login_screen.dart';
+import 'customer/home_feed_screen.dart';
+ main
 import 'agency/agency_login_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -91,7 +96,11 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+ nazifa-feature
                       builder: (context) => AgencyRegistrationScreen(),
+ 
+                      builder: (context) => AgencyLoginScreen(),
+  main
                     ),
                   );
                 },
@@ -139,4 +148,9 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+  nazifa-feature
 }
+ 
+}
+
+  main

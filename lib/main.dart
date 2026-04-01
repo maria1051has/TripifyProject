@@ -1,8 +1,17 @@
-import 'package:flutter/material.dart';   // 👈 this import is required
+import 'package:flutter/material.dart';
 import 'splash_screen.dart';
+  nazifa-feature
 // import 'home_page.dart';  // <-- updated role selection page
+ 
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+ main
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+
   runApp(const TripifyApp());
 }
 
@@ -18,7 +27,6 @@ class TripifyApp extends StatelessWidget {
         primarySwatch: Colors.teal,
         fontFamily: 'Roboto',
       ),
-      // Start app with SplashScreen
       home: const SplashScreen(),
     );
   }
