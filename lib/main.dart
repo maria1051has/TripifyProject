@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';   // 👈 this import is required
 import 'splash_screen.dart';
-
+// import 'home_page.dart';  // <-- updated role selection page
 
 void main() {
   runApp(const TripifyApp());
@@ -23,3 +23,4 @@ class TripifyApp extends StatelessWidget {
     );
   }
 }
+

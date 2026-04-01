@@ -1,4 +1,4 @@
-name: tripify
+name: tripifyUpdated
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -39,6 +39,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  firebase_core: ^2.25.0
+  cloud_firestore: ^4.15.0
+
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -57,14 +60,24 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/plane.png
-    - assets/map.png
-     
     - assets/coxsbazar.png
     - assets/sundarbans.png
     - assets/srimangal.png
     - assets/bandarban.png
     - assets/kuakata.png
+    - assets/Bikash.png
+    - assets/Nagad.png
+    - assets/card.jpg
+    - assets/hotel1.jpg
+    - assets/hotel2.jpg
+    - assets/package1.jpg
+    - assets/package2.jpg
+    - assets/package3.jpg
+    - assets/package4.jpg
+    - assets/package5.jpg
+    - assets/whitelogo2.png
+
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
