@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 import 'home_page.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -8,60 +10,43 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+    with TickerProviderStateMixin {
+  late AnimationController _planeController;
+  late AnimationController _mapController;
 
-  late Animation<double> _logoScale;
-  late Animation<double> _logoBounce;
-  late Animation<double> _textOpacity;
-  late Animation<double> _textSlide;
-  late Animation<double> _circleScale;
+  late Animation<double> _planeAnimation;
+  late Animation<double> _mapAnimation;
+
+  final double planeSize = 80;
 
   @override
   void initState() {
     super.initState();
 
-    _controller =
+    // Plane animation (3 seconds)
+    _planeController =
         AnimationController(vsync: this, duration: const Duration(seconds: 3));
+    _planeAnimation =
+        CurvedAnimation(parent: _planeController, curve: Curves.easeInOut);
 
-    _logoScale = Tween<double>(begin: 1.6, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
-      ),
-    );
+    // Map animation (3 seconds)
+    _mapController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 3));
+    _mapAnimation =
+        CurvedAnimation(parent: _mapController, curve: Curves.easeOutBack);
 
-    _logoBounce = Tween<double>(begin: 1.0, end: 1.05).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.5, 0.65, curve: Curves.elasticOut),
-      ),
-    );
+    // Start plane animation
+    _planeController.forward();
 
-    _textOpacity = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.5, 0.75, curve: Curves.easeIn),
-      ),
-    );
+    // When plane finishes, start map animation
+    _planeController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _mapController.forward();
+      }
+    });
 
-    _textSlide = Tween<double>(begin: 20, end: 0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.5, 0.75, curve: Curves.easeOut),
-      ),
-    );
-
-    _circleScale = Tween<double>(begin: 0, end: 25).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.75, 1.0, curve: Curves.easeIn),
-      ),
-    );
-
-    _controller.forward();
-
-    _controller.addStatusListener((status) {
+    // Navigate to home after map animation finishes
+    _mapController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         Navigator.pushReplacement(
           context,
@@ -73,70 +58,81 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _controller.dispose();
+    _planeController.dispose();
+    _mapController.dispose();
     super.dispose();
+  }
+
+  // Plane circular path
+  Offset _planeOffset(Size size, double t) {
+    final centerX = size.width / 2 - planeSize / 2;
+    final centerY = size.height / 2 - planeSize / 2;
+
+    final radius = min(size.width, size.height) * 0.35;
+
+    final angle = 2 * pi * t;
+    final progress = t <= 0.5 ? t * 2 : (1 - t) * 2; // out & back
+
+    final x = centerX + radius * progress * cos(angle);
+    final y = centerY + radius * progress * sin(angle);
+
+    return Offset(x, y);
   }
 
   @override
   Widget build(BuildContext context) {
-    const tealColor = Color(0xFF2FA2A7);
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: AnimatedBuilder(
-        animation: _controller,
+        animation: Listenable.merge([_planeAnimation, _mapAnimation]),
         builder: (context, child) {
-          double finalLogoScale =
-          _controller.value < 0.65 ? _logoScale.value : _logoBounce.value;
+          // Background color: teal during plane, fade to white during map
+          Color bgColor = _mapAnimation.value == 0
+              ? Colors.teal
+              : Color.lerp(Colors.teal, Colors.white, _mapAnimation.value)!;
 
-          return Stack(
-            children: [
-              Container(color: tealColor),
-
-              Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Transform.scale(
-                      scale: finalLogoScale,
-                      child: Image.asset(
-                        'assets/whitelogo2.png',
-                        width: 140,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Opacity(
-                      opacity: _textOpacity.value,
-                      child: Transform.translate(
-                        offset: Offset(0, _textSlide.value),
-                        child: const Text(
-                          "Tripify",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Center(
-                child: Transform.scale(
-                  scale: _circleScale.value,
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
+          return Container(
+            color: bgColor,
+            child: Stack(
+              children: [
+                // Map icon at center
+                Center(
+                  child: ScaleTransition(
+                    scale: _mapAnimation,
+                    child: Image.asset(
+                      'assets/map.png',
+                      width: 260,
                     ),
                   ),
                 ),
-              ),
-            ],
+
+                // Plane animation
+                AnimatedBuilder(
+                  animation: _planeAnimation,
+                  builder: (context, child) {
+                    final t = _planeAnimation.value;
+
+                    // Hide plane after orbit
+                    if (t >= 1.0) return const SizedBox();
+
+                    final offset = _planeOffset(size, t);
+                    final rotation = 0.5 * sin(2 * pi * t); // gentle swing
+
+                    return Transform.translate(
+                      offset: offset,
+                      child: Transform.rotate(
+                        angle: rotation,
+                        child: Image.asset(
+                          'assets/plane.png',
+                          width: planeSize + 50,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           );
         },
       ),
