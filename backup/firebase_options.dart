@@ -41,49 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAEiILafLyoCX90a4pVN3yk9k9e4BbMs3Y',
-    appId: '1:455429171819:web:d572352055eba658801f2e',
-    messagingSenderId: '455429171819',
-    projectId: 'tripify-9e595',
-    authDomain: 'tripify-9e595.firebaseapp.com',
-    storageBucket: 'tripify-9e595.firebasestorage.app',
-    measurementId: 'G-QB503YTXLT',
+    apiKey: 'AIzaSyAriD_Pd7uoRAbeVx1eCXkkktBjHj7N4Vo',
+    appId: '1:420640866742:web:c6babaf7cef01185f20117',
+    messagingSenderId: '420640866742',
+    projectId: 'flutter-project-eff01',
+    authDomain: 'flutter-project-eff01.firebaseapp.com',
+    storageBucket: 'flutter-project-eff01.firebasestorage.app',
+    measurementId: 'G-GFRRXN7DPQ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCrf3omU5FzNQiYAS3yTfShUd7YWJNBoOk',
-    appId: '1:455429171819:android:2091be21e223033d801f2e',
-    messagingSenderId: '455429171819',
-    projectId: 'tripify-9e595',
-    storageBucket: 'tripify-9e595.firebasestorage.app',
+    apiKey: 'AIzaSyBtUfJmHxFFEMi_4Xv9zfLaBEy7mrCYyKE',
+    appId: '1:420640866742:android:7cc0ee059abc17c4f20117',
+    messagingSenderId: '420640866742',
+    projectId: 'flutter-project-eff01',
+    storageBucket: 'flutter-project-eff01.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDXMKJKCgp7EU3eSldI3ZbAgHHJoKwhc6s',
-    appId: '1:455429171819:ios:c478ec01a32351f3801f2e',
-    messagingSenderId: '455429171819',
-    projectId: 'tripify-9e595',
-    storageBucket: 'tripify-9e595.firebasestorage.app',
+    apiKey: 'AIzaSyBxoivHMuE1t2oNCQnjhHSPCIj5PdVMoqo',
+    appId: '1:420640866742:ios:df3921d7c9b3c8bbf20117',
+    messagingSenderId: '420640866742',
+    projectId: 'flutter-project-eff01',
+    storageBucket: 'flutter-project-eff01.firebasestorage.app',
     iosBundleId: 'com.example.tripify',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDXMKJKCgp7EU3eSldI3ZbAgHHJoKwhc6s',
-    appId: '1:455429171819:ios:c478ec01a32351f3801f2e',
-    messagingSenderId: '455429171819',
-    projectId: 'tripify-9e595',
-    storageBucket: 'tripify-9e595.firebasestorage.app',
+    apiKey: 'AIzaSyBxoivHMuE1t2oNCQnjhHSPCIj5PdVMoqo',
+    appId: '1:420640866742:ios:df3921d7c9b3c8bbf20117',
+    messagingSenderId: '420640866742',
+    projectId: 'flutter-project-eff01',
+    storageBucket: 'flutter-project-eff01.firebasestorage.app',
     iosBundleId: 'com.example.tripify',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAEiILafLyoCX90a4pVN3yk9k9e4BbMs3Y',
-    appId: '1:455429171819:web:e9f77d5b8dbe3b95801f2e',
-    messagingSenderId: '455429171819',
-    projectId: 'tripify-9e595',
-    authDomain: 'tripify-9e595.firebaseapp.com',
-    storageBucket: 'tripify-9e595.firebasestorage.app',
-    measurementId: 'G-SSZ859W6BD',
+    apiKey: 'AIzaSyAriD_Pd7uoRAbeVx1eCXkkktBjHj7N4Vo',
+    appId: '1:420640866742:web:05f9398eaa5d55a4f20117',
+    messagingSenderId: '420640866742',
+    projectId: 'flutter-project-eff01',
+    authDomain: 'flutter-project-eff01.firebaseapp.com',
+    storageBucket: 'flutter-project-eff01.firebasestorage.app',
+    measurementId: 'G-TL8HBX8F4M',
   );
-
 }

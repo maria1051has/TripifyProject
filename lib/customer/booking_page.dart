@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'booking_details.dart';
 
 class BookingPage extends StatefulWidget {
@@ -12,136 +13,93 @@ class BookingPage extends StatefulWidget {
 }
 
 class _BookingPageState extends State<BookingPage> {
-
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
+  DateTime? selectedDate;
 
-  String pay = "";
-  DateTime? date;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   pickDate() async {
-    var d = await showDatePicker(
+    DateTime? d = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime(2030),
     );
-    if (d != null) {
-      setState(() {
-        date = d;
-      });
-    }
+    if (d != null) setState(() => selectedDate = d);
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      backgroundColor: Colors.white,
-
-      appBar: AppBar(
-        title: Text("Booking"),
-        backgroundColor: Colors.white,
-      ),
-
+      appBar: AppBar(title: Text("Booking Page")),
       body: Padding(
-        padding: EdgeInsets.all(15),
-
+        padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
+            Text("Package Name:"),
             Text(widget.packageName),
-            Text(widget.packagePrice, style: TextStyle(color: Colors.teal)),
-
-            SizedBox(height: 15),
-
-            TextField(
-              controller: name,
-              decoration: InputDecoration(hintText: "Name"),
-            ),
-
-            TextField(
-              controller: phone,
-              decoration: InputDecoration(hintText: "Phone"),
-            ),
-
             SizedBox(height: 10),
-
+            Text("Price:"),
+            Text(widget.packagePrice),
+            SizedBox(height: 15),
+            Text("Your Name"),
+            TextField(controller: name),
+            SizedBox(height: 10),
+            Text("Mobile Number"),
+            TextField(controller: phone, keyboardType: TextInputType.phone),
+            SizedBox(height: 10),
+            Text("Select Date"),
             GestureDetector(
               onTap: pickDate,
               child: Container(
                 padding: EdgeInsets.all(10),
                 color: Colors.grey[200],
-                child: Text(date == null
-                    ? "Select Date"
-                    : "${date!.day}-${date!.month}-${date!.year}"),
+                child: Text(
+                  selectedDate == null
+                      ? "Pick a date"
+                      : "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}",
+                ),
               ),
             ),
-
-            SizedBox(height: 15),
-
-            Text("Payment"),
-
-            Row(
-              children: [
-                Radio(
-                  value: "bkash",
-                  groupValue: pay,
-                  onChanged: (v) {
-                    setState(() {
-                      pay = "bkash";
-                    });
-                  },
-                ),
-                Text("Bkash")
-              ],
-            ),
-
-            Row(
-              children: [
-                Radio(
-                  value: "nagad",
-                  groupValue: pay,
-                  onChanged: (v) {
-                    setState(() {
-                      pay = "nagad";
-                    });
-                  },
-                ),
-                Text("Nagad")
-              ],
-            ),
-
             SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (name.text.isEmpty ||
+                      phone.text.isEmpty ||
+                      selectedDate == null) {
+                    print("Fill all fields");
+                    return;
+                  }
 
-            ElevatedButton(
-              onPressed: () {
-
-                if (name.text == "" ||
-                    phone.text == "" ||
-                    pay == "" ||
-                    date == null) {
-
-                  print("Fill all");
-
-                } else {
+                  await _firestore.collection("booking").add({
+                    "name": name.text,
+                    "phone": phone.text,
+                    "package": widget.packageName,
+                    "price": widget.packagePrice,
+                    "date": selectedDate!.toIso8601String(),
+                    "time": DateTime.now(),
+                  });
 
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BookingDetails(
+                      builder: (_) => BookingDetails(
                         packageName: widget.packageName,
                         packagePrice: widget.packagePrice,
-                        paymentMethod: pay,
+                        userName: name.text,
+                        phone: phone.text,
+                        bookingDate:
+                        "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}",
                       ),
                     ),
                   );
-                }
-              },
-              child: Text("Confirm"),
+                },
+                child: Text("Confirm Booking"),
+              ),
             )
-
           ],
         ),
       ),
