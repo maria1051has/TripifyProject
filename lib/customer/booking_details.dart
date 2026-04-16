@@ -15,44 +15,70 @@ class BookingDetails extends StatelessWidget {
     required this.bookingDate,
   });
 
+  Widget buildRow(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 110,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.teal,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(value),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Booking Details"),
+        backgroundColor: Colors.teal,
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Package Name:", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(packageName),
-
-            SizedBox(height: 10),
-            Text("Price:", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(packagePrice),
-
-            SizedBox(height: 10),
-            Text("Name:", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(userName),
-
-            SizedBox(height: 10),
-            Text("Phone:", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(phone),
-
-            SizedBox(height: 10),
-            Text("Booking Date:", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(bookingDate),
+            // simple card
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.teal.shade50,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  buildRow("Package", packageName),
+                  buildRow("Price", packagePrice),
+                  buildRow("Name", userName),
+                  buildRow("Phone", phone),
+                  buildRow("Date", bookingDate),
+                ],
+              ),
+            ),
 
             SizedBox(height: 30),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text("Back"),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
               ),
+              child: Text("Back"),
             )
           ],
         ),

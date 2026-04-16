@@ -1,8 +1,102 @@
 import 'package:flutter/material.dart';
-import 'explore_screen.dart'; // Make sure this file exists in the same folder
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'explore_screen.dart';
 
-class CustomerLoginScreen extends StatelessWidget {
+class CustomerLoginScreen extends StatefulWidget {
   const CustomerLoginScreen({super.key});
+
+  @override
+  State<CustomerLoginScreen> createState() => _CustomerLoginScreenState();
+}
+
+class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  bool isLoading = false;
+
+  Future<void> loginUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final email = emailController.text.trim();
+      final password = passwordController.text.trim();
+
+      // 🔥 1. VALIDATION
+      if (email.isEmpty || password.isEmpty) {
+        throw Exception("Email and password required");
+      }
+
+      if (password.length < 6) {
+        throw Exception("Password must be at least 6 characters");
+      }
+
+      UserCredential userCredential;
+
+      // 🔥 2. TRY LOGIN
+      try {
+        userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+        print("LOGIN SUCCESS");
+      }
+      // 🔥 3. HANDLE ERROR
+      on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          // CREATE ACCOUNT
+          userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+
+          print("ACCOUNT CREATED");
+        } else if (e.code == 'wrong-password') {
+          throw Exception("Wrong password");
+        } else {
+          throw Exception(e.message ?? "Authentication failed");
+        }
+      }
+
+      // 🔥 4. SAVE TO FIRESTORE
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'email': email,
+        'createdAt': Timestamp.now(),
+      });
+
+      // 🔥 5. NAVIGATE
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ExploreScreen()),
+      );
+    } catch (e) {
+      print("ERROR: $e");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,19 +113,18 @@ class CustomerLoginScreen extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
                   'Tripify',
-                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    letterSpacing: 1.2,
                   ),
                 ),
+
                 const SizedBox(height: 40),
+
                 const Text(
                   'Continue as a Voyager',
                   style: TextStyle(
@@ -40,90 +133,61 @@ class CustomerLoginScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
+
                 const SizedBox(height: 30),
-                const TextField(
-                  decoration: InputDecoration(
+
+                // EMAIL
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
                     labelText: 'Email',
                     labelStyle: TextStyle(color: Colors.white),
                     filled: true,
                     fillColor: Color(0xFF006666),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2),
-                    ),
+                    border: OutlineInputBorder(),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   keyboardType: TextInputType.emailAddress,
                 ),
+
                 const SizedBox(height: 20),
-                const TextField(
-                  decoration: InputDecoration(
+
+                // PASSWORD
+                TextField(
+                  controller: passwordController,
+                  decoration: const InputDecoration(
                     labelText: 'Password',
                     labelStyle: TextStyle(color: Colors.white),
                     filled: true,
                     fillColor: Color(0xFF006666),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white, width: 2),
-                    ),
+                    border: OutlineInputBorder(),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   obscureText: true,
                 ),
-                const SizedBox(height: 12),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
 
-                    },
-                    child: const Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 25),
+
+                // BUTTON
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ExploreScreen(),
-                        ),
-                      );
-                    },
+                    onPressed: isLoading ? null : loginUser,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    child: const Text(
+                    child: isLoading
+                        ? const CircularProgressIndicator()
+                        : const Text(
                       'Login',
                       style: TextStyle(
-                        fontSize: 16,
                         color: Color(0xFF008080),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 20),
               ],
             ),
           ),
